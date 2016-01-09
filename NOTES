@@ -1,0 +1,8 @@
+NOTES
+
+
+MAKE A NEW REPO ON GITHUB AND PUSH FILES TO IT
+
+curl -u 'crosshj' https://api.github.com/user/repos -d '{"name":"dk-auto","description":"This project is a test"}'
+git remote add origin git@github.com:crosshj/dk-auto.git
+git push origin master
