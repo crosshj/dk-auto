@@ -1,8 +1,124 @@
-NOTES
 
-
-MAKE A NEW REPO ON GITHUB AND PUSH FILES TO IT
+# MAKE A NEW REPO ON GITHUB AND PUSH FILES TO IT:
 
 curl -u 'crosshj' https://api.github.com/user/repos -d '{"name":"dk-auto","description":"This project is a test"}'
 git remote add origin git@github.com:crosshj/dk-auto.git
 git push origin master
+
+
+# WAKE UP PHONE:
+#http://stackoverflow.com/questions/14772619/wake-up-android-with-use-adb-or-eclipse-just-before-debug
+#http://developer.android.com/reference/android/view/KeyEvent.html
+
+adb shell input keyevent KEYCODE_WAKEUP // does not seem to work
+adb shell input keyevent KEYCODE_POWER  // will also turn off screen
+adb shell input keyevent 26 # power button
+adb shell dumpsys power | grep "mScreenOn=true" | xargs -0 test -z && adb shell input keyevent 26
+
+# is screen on:
+adb shell dumpsys power | grep "mScreenOn=" | sed -n 's/mScreenOn=//p'
+
+# KILL REPUBLIC WIRELESS:
+#http://stackoverflow.com/questions/3117095/stopping-an-android-app-from-console
+
+adb shell am force-stop com.bandwidth.rw
+adb shell am force-stop com.bandwidth.rw.sys
+
+#uninstall:
+adb shell pm uninstall -k com.bandwidth.rw
+
+#CHANGE STAY AWAKE MODE:
+#http://stackoverflow.com/questions/18269769/how-to-open-developer-options-using-adb
+
+adb shell am start -n com.android.settings/.DevelopmentSettings
+# then click the stay awake checkmark
+
+
+
+-----------------------------------------------------------------------
+
+# ELECTRON
+
+# Tutorials
+# https://medium.com/developers-writing/building-a-desktop-application-with-electron-204203eeb658#.m4blnu6wm
+
+
+
+
+
+-----------------------------------------------------------------------
+
+
+
+
+
+
+
+-----ADB
+// screen capture
+adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' > screen.png && gpicview screen.png
+
+// list packages
+adb shell 'pm list packages -f' | sed -e 's/.*=//' | sort
+
+//find main activity
+adb shell monkey -p {PACKAGE NAME FROM LIST PACKAGE STEP} -c android.intent.category.LAUNCHER 1
+adb shell logcat -d | grep 'START u0' | tail -n 1 | sed 's/.*cmp=\(.*\)} .*/\1/g'
+
+
+-----OTHER
+
+#find pixels
+#https://www.google.com/search?client=ubuntu&channel=fs&q=node+image+process+find+pixels&ie=utf-8&oe=utf-8
+
+
+-----DK
+
+com.ea.game.dungeonkeeper_na
+
+START: 	adb shell am start -n com.ea.game.dungeonkeeper_na/com.ea.game.dungeonkeeper.DKActivity
+FORCE EXIT APP: adb shell am force-stop com.ea.game.dungeonkeeper_na
+
+
+LOCATIONS: (adb shell input tap x y)
+
+SWIPE IMP: adb shell input swipe 100 500 1100 500
+
+PLAY MENU:  20 200 (open), 430 200 (close)
+IMPS: 400 10 (open) 1200 10 (close) 30 30 (back)
+GEMS: 900 10 (open) 1200 10 (close)
+GOLD: 1050 10 (open) 1200 10 (close)
+STONE: 1050 60 (open) 1200 10 (close)
+COMBAT: 1250 120
+MANA: 1250 200
+
+BATTLE: adb shell input tap 100 600
+CAMPAIGN: adb shell input tap 600 300
+	(scroll top) adb shell input swipe 100 110 100 1300 (x5)
+	ATTACK: adb shell input tap 830 220
+
+GUILD: 1200 400 (open) 1050 30 (close)
+	PERKS: 1050 200
+	BANNER: 400 700
+	DONATE: 500 700 (open) 970 120 (close)
+		SKELE: 400 300
+		TROLL: 500 300
+		WAR: 700 300
+		MISS: 900 400 (add) 970 400 (remove)
+
+		DONATE: 600 600
+	STAR: 600 700
+	MESS: 700 700
+	SEARCH: 800 700
+	MAIL: 890 700
+
+MAIL: 1200 450 (open) 1050 30 (close)
+CHEST: 1200 500 (open) 1050 30 (close)
+BUILD: 1200 600 (open) 1200 10 (close)
+
+
+
+bottom right corner: adb shell input swipe 500 500 0 0
+
+android popup: adb shell input tap 
+
