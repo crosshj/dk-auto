@@ -3,6 +3,14 @@ var adb = require('adbkit');
 var client = adb.createClient();
 var fs = require('fs');
 var gm = require('gm').subClass({imageMagick: true});
+var raphael = require('raphael');
+
+/*
+
+https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
+https://github.com/cjheath/Raphaelle/blob/master/example.html
+
+*/
 
 
 function tapCB(err, output){
@@ -11,7 +19,7 @@ function tapCB(err, output){
 }
 
 function bindEvents() {
-    document.querySelector('#screenshot').addEventListener("click", function(e){
+    document.querySelector('#screenshot').addEventListener("contextmenu", function(e){
         var displayWidth=720; //TODO: get dynamically
         var displayHeight=1280;
 
@@ -28,15 +36,37 @@ function bindEvents() {
         }
 
         //console.log(e);
-        console.log("X coords: " + translated.x + ", Y coords: " + translated.y);
+        console.log("X coords: " + xPos + ", Y coords: " + yPos);
+        var circle = paper.circle(xPos, yPos, 10);
+        circle.attr("fill", "#f00");
+        circle.drag(function (dx, dy) {
+            this.attr({
+                cx: x + dx, //Math.min(Math.max(x + dx, 15), 85),
+                cy: y + dy //Math.min(Math.max(y + dy, 15), 85)
+            });
+        }, function () {
+            x = this.attr("cx");
+            y = this.attr("cy");
+        });
+        //circle.click(function(e) { alert("moveable clicked!"); });
 
         var shellCommand = 'input tap ' + translated.x + " " + translated.y;
-        console.log('adb shell ' + shellCommand);
-        client.shell(clientId, shellCommand, tapCB);
+        console.log('\tadb shell ' + shellCommand);
+        if(typeof(clientId) !== 'undefined'){
+            client.shell(clientId, shellCommand, tapCB);
+        }
     });
 
     document.querySelector('#screenshot').addEventListener("click", function(e){
-        findPixels(clientId, findPixelsCB);
+        //findPixels(clientId, findPixelsCB);
+    });
+
+    document.querySelector('svg').addEventListener("click", function(e){
+        console.log('clicked Raphael')
+    });
+
+    document.querySelector('#refresh').addEventListener("click", function(e){
+        location.reload();
     });
 
     document.addEventListener("keydown", function (e) {
@@ -50,6 +80,7 @@ function bindEvents() {
 
 // like jQuery $().ready
 document.addEventListener("DOMContentLoaded", function(event) { 
+    window.paper = setupRaphael();
     bindEvents();
 });
 
@@ -109,7 +140,10 @@ var listDevicesCB = function(err, devices){
     findPixels(clientId, findPixelsCB);
 };
 
-
-
-
 client.listDevices(listDevicesCB);
+
+var setupRaphael = function(){
+    var paper = Raphael("screenshot", "100%", "100%");
+
+    return paper;
+}
