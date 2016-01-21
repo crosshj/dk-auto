@@ -1,0 +1,46 @@
+body{
+    margin: 0px;
+    background-color: #191919;
+    text-align: center;
+    /*-webkit-app-region: drag;*/
+}
+div#screenshot{
+    width: 711px;
+    height: 400px;
+    background-color: rgba(128, 128, 128, 0.32);
+    background-image: url("screencap.png");
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-top: 20px;
+    /*border: 1px solid rgba(255, 0, 0, 0.28);*/
+}
+div#buttons{
+    text-align: right;
+    background-color: rgba(0, 0, 0, 0.72);
+}
+div.button{
+    display: inline-block;
+    position: relative;
+    border: 1px solid black;
+    padding: 5px;
+    margin: 5px;
+    margin-left: 0px;
+    background-color: rgba(255, 255, 255, 0.21);
+    cursor: default;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+svg {
+    left: 0px !important;
+    background-color: rgba(0, 255, 173, 0.2);
+}
+
+div#actions{
+    background-color: yellow;
+    width: 711px;
+    height: 200px;
+    display: inline-block;
+    margin-top: 10px;
+}
