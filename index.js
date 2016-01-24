@@ -53,26 +53,36 @@ function inputSwipe(clientId, x1, y1, x2, y2){
     client.shell(clientId, shellCommand, tapCB);
 }
 
-function bindEvents() {
-    document.querySelector('#screenshot').addEventListener("contextmenu", function(e){
+function getClickCoords(event){
         var displayWidth=720; //TODO: get dynamically
         var displayHeight=1280;
 
-        var el = e.target;
+        var el = event.target;
         var elwidth = el.clientWidth;
         var elheight = el.clientHeight;
 
-        var xPos = e.x - el.offsetLeft;
-        var yPos = e.y - el.offsetTop;
+        var xPos = event.x - el.offsetLeft;
+        var yPos = event.y - el.offsetTop;
+
+        //console.log(e);
+        console.log("X coords: " + xPos + ", Y coords: " + yPos);
 
         var translated = {
             x: Math.round(displayHeight / elwidth * xPos),
             y: Math.round(displayWidth / elheight * yPos)
         }
+        return { 
+            device: translated,
+            browser: { x: xPos, y: yPos }
+        };
+}
 
-        //console.log(e);
-        console.log("X coords: " + xPos + ", Y coords: " + yPos);
-        var circle = paper.circle(xPos, yPos, 10);
+function bindEvents() {
+    document.querySelector('#screenshot').addEventListener("contextmenu", function(e){
+
+        var coords = getClickCoords(e);
+
+        var circle = paper.circle(coords.browser.x, coords.browser.y, 10);
         circle.attr("fill", "#f00");
         circle.drag(function (dx, dy) {
             this.attr({
@@ -85,7 +95,7 @@ function bindEvents() {
         });
         //circle.click(function(e) { alert("moveable clicked!"); });
 
-        inputTap(clientId, translated.x, translated.y);
+        inputTap(clientId, coords.device.x, coords.device.y);
     });
 
     document.querySelector('#screenshot').addEventListener("click", function(e){
@@ -102,6 +112,10 @@ function bindEvents() {
 
     document.querySelector('#swipe').addEventListener("click", function(e){
         newSwipe();
+    });
+
+    document.querySelector('#clear').addEventListener("click", function(e){
+        paper.clear();
     });
 
     document.addEventListener("keydown", function (e) {
