@@ -38,9 +38,15 @@ svg {
 }
 
 div#actions{
-    background-color: yellow;
+    background-color: #292929;
     width: 711px;
     height: 310px;
     display: inline-block;
     margin-top: 10px;
+}
+
+.fa {
+    position: relative;
+    top: 1px;
+    right: -2px;
 }

@@ -18,6 +18,41 @@ function tapCB(err, output){
     findPixels(clientId, findPixelsCB);
 }
 
+function inputTap(clientId, x, y){
+    var isXReasonable = x && isFinite(x); //TODO: add is within screen bounds
+    var isYReasonable = y && isFinite(y);
+    
+    if (!clientId || !isXReasonable || !isYReasonable){
+        console.log('tap error: ', arguments);
+        return;
+    }
+    var shellCommand = 'input tap ' + x + " " + y;
+    console.log('\tadb shell ' + shellCommand);
+    client.shell(clientId, shellCommand, tapCB);
+}
+
+function inputSwipe(clientId, x1, y1, x2, y2){
+    var isX1Reasonable = x1 && isFinite(x1);
+    var isY1Reasonable = y1 && isFinite(y1);
+    var isX2Reasonable = x2 && isFinite(x2);
+    var isY2Reasonable = y2 && isFinite(y2);
+    var isCoordsReasonable = isX1Reasonable
+        && isY1Reasonable
+        && isX2Reasonable
+        && isY2Reasonable;
+
+    if (!clientId || !isCoordsReasonable){
+        console.log('swipe error: ', arguments);
+        return;
+    }
+    //adb shell input swipe 100 500 1100 500
+    var shellCommand = 'input swipe ' 
+        + x1 + " " + y1 + " " 
+        + x2 + " " + y2;
+    console.log('\tadb shell ' + shellCommand);
+    client.shell(clientId, shellCommand, tapCB);
+}
+
 function bindEvents() {
     document.querySelector('#screenshot').addEventListener("contextmenu", function(e){
         var displayWidth=720; //TODO: get dynamically
@@ -50,11 +85,7 @@ function bindEvents() {
         });
         //circle.click(function(e) { alert("moveable clicked!"); });
 
-        var shellCommand = 'input tap ' + translated.x + " " + translated.y;
-        console.log('\tadb shell ' + shellCommand);
-        if(typeof(clientId) !== 'undefined'){
-            client.shell(clientId, shellCommand, tapCB);
-        }
+        inputTap(clientId, translated.x, translated.y);
     });
 
     document.querySelector('#screenshot').addEventListener("click", function(e){
@@ -69,8 +100,8 @@ function bindEvents() {
         location.reload();
     });
 
-    document.querySelector('#slide').addEventListener("click", function(e){
-        newSlide();
+    document.querySelector('#swipe').addEventListener("click", function(e){
+        newSwipe();
     });
 
     document.addEventListener("keydown", function (e) {
@@ -152,35 +183,34 @@ var setupRaphael = function(){
     return paper;
 }
 
-var newSlide = function(){
-    console.log('make a new slide');
-    var slide = {
+var newSwipe = function(){
+    var swipe = {
         start: { x: 20, y:20 },
         end:   { x: 80, y:80 },
 
     };
     
     var bOutline = paper.path("M"
-        +slide.start.x+","+
-        +slide.start.y+"L"+
-        +slide.end.x+","
-        +slide.end.y
+        +swipe.start.x+","+
+        +swipe.start.y+"L"+
+        +swipe.end.x+","
+        +swipe.end.y
         );
     bOutline.attr({stroke:'#000',"stroke-width":5});
 
     var between = paper.path("M"
-        +slide.start.x+","+
-        +slide.start.y+"L"+
-        +slide.end.x+","
-        +slide.end.y
+        +swipe.start.x+","+
+        +swipe.start.y+"L"+
+        +swipe.end.x+","
+        +swipe.end.y
         );
     between.attr({stroke:'#fff',"stroke-width":3});
     
 
-    var start = paper.circle(slide.start.x, slide.start.y, 10);
+    var start = paper.circle(swipe.start.x, swipe.start.y, 10);
     start.data({ 'data-type': 'startHandle'});
     
-    var end = paper.circle(slide.end.x, slide.end.y, 10);
+    var end = paper.circle(swipe.end.x, swipe.end.y, 10);
     end.data({ 'data-type': 'endHandle'});
 
     start.attr("fill", "#0f0");
@@ -191,25 +221,25 @@ var newSlide = function(){
             cy: y + dy
         });
         if(this.data('data-type') === 'startHandle'){
-            slide.start.x = this.attr('cx');
-            slide.start.y = this.attr('cy');
+            swipe.start.x = this.attr('cx');
+            swipe.start.y = this.attr('cy');
         } else {
-            slide.end.x = this.attr('cx');
-            slide.end.y = this.attr('cy');
+            swipe.end.x = this.attr('cx');
+            swipe.end.y = this.attr('cy');
         }
         between.attr({
             path: "M"
-                +slide.start.x+","+
-                +slide.start.y+"L"+
-                +slide.end.x+","
-                +slide.end.y
+                +swipe.start.x+","+
+                +swipe.start.y+"L"+
+                +swipe.end.x+","
+                +swipe.end.y
         });
         bOutline.attr({
             path: "M"
-                +slide.start.x+","+
-                +slide.start.y+"L"+
-                +slide.end.x+","
-                +slide.end.y
+                +swipe.start.x+","+
+                +swipe.start.y+"L"+
+                +swipe.end.x+","
+                +swipe.end.y
         });
     };
     var stopMove = function () {
