@@ -69,6 +69,10 @@ function bindEvents() {
         location.reload();
     });
 
+    document.querySelector('#slide').addEventListener("click", function(e){
+        newSlide();
+    });
+
     document.addEventListener("keydown", function (e) {
         if (e.which === 123) {
           require('remote').getCurrentWindow().toggleDevTools();
@@ -146,4 +150,74 @@ var setupRaphael = function(){
     var paper = Raphael("screenshot", "100%", "100%");
 
     return paper;
+}
+
+var newSlide = function(){
+    console.log('make a new slide');
+    var slide = {
+        start: { x: 20, y:20 },
+        end:   { x: 80, y:80 },
+
+    };
+    
+    var bOutline = paper.path("M"
+        +slide.start.x+","+
+        +slide.start.y+"L"+
+        +slide.end.x+","
+        +slide.end.y
+        );
+    bOutline.attr({stroke:'#000',"stroke-width":5});
+
+    var between = paper.path("M"
+        +slide.start.x+","+
+        +slide.start.y+"L"+
+        +slide.end.x+","
+        +slide.end.y
+        );
+    between.attr({stroke:'#fff',"stroke-width":3});
+    
+
+    var start = paper.circle(slide.start.x, slide.start.y, 10);
+    start.data({ 'data-type': 'startHandle'});
+    
+    var end = paper.circle(slide.end.x, slide.end.y, 10);
+    end.data({ 'data-type': 'endHandle'});
+
+    start.attr("fill", "#0f0");
+    end.attr("fill", "#f00");
+    var move = function (dx, dy) {
+        this.attr({
+            cx: x + dx,
+            cy: y + dy
+        });
+        if(this.data('data-type') === 'startHandle'){
+            slide.start.x = this.attr('cx');
+            slide.start.y = this.attr('cy');
+        } else {
+            slide.end.x = this.attr('cx');
+            slide.end.y = this.attr('cy');
+        }
+        between.attr({
+            path: "M"
+                +slide.start.x+","+
+                +slide.start.y+"L"+
+                +slide.end.x+","
+                +slide.end.y
+        });
+        bOutline.attr({
+            path: "M"
+                +slide.start.x+","+
+                +slide.start.y+"L"+
+                +slide.end.x+","
+                +slide.end.y
+        });
+    };
+    var stopMove = function () {
+        x = this.attr("cx");
+        y = this.attr("cy");
+    };
+
+    start.drag(move, stopMove);
+    end.drag(move, stopMove);
+    
 }
