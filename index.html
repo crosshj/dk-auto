@@ -3,40 +3,22 @@
   <head>
     <meta charset="UTF-8">
     <title>&nbsp;</title>
-    <style type="text/css">
-        body{
-            margin: 0px;
-            background-color: #191919;
-            text-align: center;
-            /*-webkit-app-region: drag;*/
-        }
-        div#screenshot{
-            min-width: 711px;
-            min-height: 400px;
-            background-color: rgba(128, 128, 128, 0.32);
-            /*background-image: url("screencap.png");*/
-            display: inline-block;
-            background-repeat: no-repeat;
-            background-size: contain;
-            margin-top: 20px;
-            /*border: 1px solid rgba(255, 0, 0, 0.28);*/
-        }
-        div#refresh{
-            display: inline-block;
-            position: absolute;
-            top: 430px;
-            right: 31px;
-            border: 1px solid black;
-            padding: 5px;
-            background-color: rgba(255, 255, 255, 0.21);
-            cursor: default;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="index.css" />
     <script type="text/javascript" src="index.js"></script>
   </head>
   <body>
-    <div id="screenshot"/>
-    <div id="refresh">REFRESH</>
+    <div id="screenshot"></div>
+    <div id="refresh">REFRESH</div>
+    <div id="controls">
+        <div class="swipe">
+            <form>
+                From: <input type="text" name="fromX">
+                      <input type="text" name="fromY"><br><br>
+                To: <input type="text" name="toX">
+                    <input type="text" name="toY"><br><br>
+            </form>
+        </div>
+    </div>
   </body>
 
 </html>

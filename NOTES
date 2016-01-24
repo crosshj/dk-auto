@@ -116,6 +116,18 @@ MAIL: 1200 450 (open) 1050 30 (close)
 CHEST: 1200 500 (open) 1050 30 (close)
 BUILD: 1200 600 (open) 1200 10 (close)
 
+BEEN ATTACKED REARM:
+adb shell input tap 792 596
+REARM ALL TRAPS:
+adb shell input tap 645 529
+CLOSE:
+adb shell input tap 918 133
+
+RECONNECT:
+adb shell input tap 639 475
+
+SWIPE IMP:
+adb shell input tap 646 522
 
 
 bottom right corner: adb shell input swipe 500 500 0 0
