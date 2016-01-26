@@ -93,6 +93,7 @@ function bindEvents() {
     document.querySelector('#screenshot').addEventListener("contextmenu", function(e){
 
         var coords = getClickCoords(e);
+        var clientId = clientId || null;
 
         var circle = paper.circle(coords.browser.x, coords.browser.y, 10);
         circle.attr("fill", "#f00");
@@ -128,6 +129,7 @@ function bindEvents() {
 
     document.querySelector('#clear').addEventListener("click", function(e){
         paper.clear();
+        document.querySelector('#list').innerHTML="";
     });
 
     document.addEventListener("keydown", function (e) {
@@ -190,6 +192,8 @@ var findPixelsCB = function(err, location){
 };
 
 var listDevicesCB = function(err, devices){
+    window.clientId = null;
+
     if (err){ return console.log(err); }
     if (!devices || devices.length === 0){ 
         return console.log('no devices found');
