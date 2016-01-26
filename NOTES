@@ -1,4 +1,12 @@
+# TODO
 
+show loading icon over screen view for refresh and start
+
+show "no device found" for screen view when appropriate
+
+
+
+---------------------------------------------------------------------
 # MAKE A NEW REPO ON GITHUB AND PUSH FILES TO IT:
 
 curl -u 'crosshj' https://api.github.com/user/repos -d '{"name":"dk-auto","description":"This project is a test"}'

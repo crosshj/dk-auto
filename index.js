@@ -12,6 +12,18 @@ https://github.com/cjheath/Raphaelle/blob/master/example.html
 
 */
 
+// depends on hidden element being present
+function addListItem(x1,y1,x2,y2){
+    var clone = document.querySelector('.controls').cloneNode(true);
+    clone.style.display="";
+    var inputs = clone.getElementsByTagName('input')
+    inputs[0].value=x1;
+    inputs[1].value=y1;
+    inputs[2].value=x2;
+    inputs[3].value=y2;
+    document.getElementById('list').appendChild(clone);
+    return inputs;
+}
 
 function tapCB(err, output){
     //console.log(output);
@@ -198,12 +210,22 @@ var setupRaphael = function(){
 }
 
 var newSwipe = function(){
-    var swipe = {
-        start: { x: 20, y:20 },
-        end:   { x: 80, y:80 },
 
+
+    var swipe = {
+        start: { x: 70, y:70 },
+        end:   { x: 640, y:340 },
     };
-    
+
+    var listItem = addListItem(
+        swipe.start.x,
+        swipe.start.y,
+        swipe.end.x,
+        swipe.end.y
+    );
+
+    //TODO: when list item values change, so should GUI position
+
     var bOutline = paper.path("M"
         +swipe.start.x+","+
         +swipe.start.y+"L"+
@@ -219,7 +241,6 @@ var newSwipe = function(){
         +swipe.end.y
         );
     between.attr({stroke:'#fff',"stroke-width":3});
-    
 
     var start = paper.circle(swipe.start.x, swipe.start.y, 10);
     start.data({ 'data-type': 'startHandle'});
@@ -255,6 +276,10 @@ var newSwipe = function(){
                 +swipe.end.x+","
                 +swipe.end.y
         });
+        listItem.fromX.value = swipe.start.x;
+        listItem.fromY.value = swipe.start.y;
+        listItem.toX.value = swipe.end.x;
+        listItem.toY.value = swipe.end.y;
     };
     var stopMove = function () {
         x = this.attr("cx");
@@ -263,5 +288,4 @@ var newSwipe = function(){
 
     start.drag(move, stopMove);
     end.drag(move, stopMove);
-    
 }
