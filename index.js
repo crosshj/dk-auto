@@ -93,7 +93,7 @@ function bindEvents() {
     document.querySelector('#screenshot').addEventListener("contextmenu", function(e){
 
         var coords = getClickCoords(e);
-        var clientId = clientId || null;
+        var clientId = window.clientId || null;
 
         var circle = paper.circle(coords.browser.x, coords.browser.y, 10);
         circle.attr("fill", "#f00");
@@ -201,6 +201,10 @@ var listDevicesCB = function(err, devices){
 
     //TODO: be fancy, let user choose device
     clientId = devices[0].id;
+    
+    if(!clientId){
+        console.log('No devices found in: ', devices)
+    }
 
     findPixels(clientId, findPixelsCB);
 };
